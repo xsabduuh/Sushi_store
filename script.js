@@ -72,6 +72,8 @@ let cart = JSON.parse(localStorage.getItem('sushiCart')) || [];
 // تحميل المنتجات
 function loadProducts(filter = 'all') {
     const grid = document.getElementById('productsGrid');
+    if (!grid) return;
+    
     grid.innerHTML = '';
     
     const filteredProducts = filter === 'all' 
@@ -89,14 +91,14 @@ function createProductCard(product) {
     const card = document.createElement('div');
     card.className = 'product-card';
     card.innerHTML = `
-        <img src="${product.image}" alt="${product.name}" class="product-image">
+        <img src="${product.image}" alt="${product.name}" class="product-image" loading="lazy">
         <div class="product-info">
             <div class="product-category">${getCategoryName(product.category)}</div>
             <h3 class="product-name">${product.name}</h3>
             <p class="product-description">${product.description}</p>
             <div class="product-footer">
                 <span class="product-price">${product.price} ر.س</span>
-                <button class="add-to-cart" onclick="addToCart(${product.id})">
+                <button class="add-to-cart" onclick="addToCart(${product.id})" aria-label="إضافة للسلة">
                     <i class="fas fa-plus"></i>
                 </button>
             </div>
@@ -119,6 +121,8 @@ function getCategoryName(category) {
 // إضافة للسلة
 function addToCart(productId) {
     const product = products.find(p => p.id === productId);
+    if (!product) return;
+    
     const existingItem = cart.find(item => item.id === productId);
     
     if (existingItem) {
@@ -139,9 +143,11 @@ function saveCart() {
 
 // تحديث واجهة السلة
 function updateCartUI() {
-    const cartCount = document.querySelector('.cart-count');
+    const cartCount = document.getElementById('cartCount');
     const cartItems = document.getElementById('cartItems');
     const cartTotal = document.getElementById('cartTotal');
+    
+    if (!cartCount || !cartItems || !cartTotal) return;
     
     // تحديث العدد
     const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
@@ -181,71 +187,137 @@ function updateCartUI() {
 // تحديث الكمية
 function updateQuantity(productId, change) {
     const item = cart.find(item => item.id === productId);
-    if (item) {
-        item.quantity += change;
-        if (item.quantity <= 0) {
-           span>
-                        </div>
-                    </div>
-                </div>
-                <div class="about-image">
-                    <img src="https://images.unsplash.com/photo-1553621042-f6e147245754?w=800" alt="طاهي سوشي">
-                </div>
-            </div>
-        </div>
-    </section>
+    if (!item) return;
+    
+    item.quantity += change;
+    if (item.quantity <= 0) {
+        removeFromCart(productId);
+    } else {
+        saveCart();
+        updateCartUI();
+    }
+}
 
-    <!-- سلة التسوق -->
-    <div class="cart-sidebar" id="cartSidebar">
-        <div class="cart-header">
-            <h3>سلة التسوق</h3>
-            <button class="close-cart" onclick="toggleCart()">
-                <i class="fas fa-times"></i>
-            </button>
-        </div>
-        <div class="cart-items" id="cartItems">
-            <!-- عناصر السلة تُضاف عبر JavaScript -->
-        </div>
-        <div class="cart-footer">
-            <div class="cart-total">
-                <span>الإجمالي:</span>
-                <span id="cartTotal">0 ر.س</span>
-            </div>
-            <button class="checkout-btn" onclick="checkout()">إتمام الطلب</button>
-        </div>
-    </div>
-    <div class="overlay" id="overlay" onclick="toggleCart()"></div>
+// حذف من السلة
+function removeFromCart(productId) {
+    cart = cart.filter(item => item.id !== productId);
+    saveCart();
+    updateCartUI();
+    showToast('تم الحذف من السلة', 'error');
+}
 
-    <!-- التذييل -->
-    <footer id="contact" class="footer">
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-section">
-                    <h3>تواصل معنا</h3>
-                    <p><i class="fas fa-phone"></i> 0500 123 456</p>
-                    <p><i class="fas fa-envelope"></i> info@sushimaster.com</p>
-                    <p><i class="fas fa-map-marker-alt"></i> الرياض، المملكة العربية السعودية</p>
-                </div>
-                <div class="footer-section">
-                    <h3>ساعات العمل</h3>
-                    <p>الأحد - الخميس: 12:00 ظ - 11:00 م</p>
-                    <p>الجمعة - السبت: 1:00 ظ - 12:00 ص</p>
-                </div>
-                <div class="footer-section">
-                    <h3>تابعنا</h3>
-                    <div class="social-links">
-                        <a href="#"><i class="fab fa-instagram"></i></a>
-                        <a href="#"><i class="fab fa-twitter"></i></a>
-                        <a href="#"><i class="fab fa-snapchat"></i></a>
-                    </div>
-                </div>
-            </div>
-            <div class="footer-bottom">
-                <p>&copy; 2026 سوشي ماستر. جميع الحقوق محفوظة</p>
-            </div>
-        </div>
-    </footer>
+// فتح/إغلاق السلة
+function toggleCart() {
+    const sidebar = document.getElementById('cartSidebar');
+    const overlay = document.getElementById('overlay');
+    if (!sidebar || !overlay) return;
+    
+    sidebar.classList.toggle('open');
+    overlay.classList.toggle('active');
+    document.body.style.overflow = sidebar.classList.contains('open') ? 'hidden' : '';
+}
 
-    <script src="script.js"></script>
-</body>
-</html>
+// إتمام الطلب
+function checkout() {
+    if (cart.length === 0) {
+        showToast('السلة فارغة!', 'error');
+        return;
+    }
+    
+    const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+    showToast(`تم إرسال طلبك بقيمة ${total} ر.س!`, 'success');
+    
+    // إفراغ السلة بعد 2 ثانية
+    setTimeout(() => {
+        cart = [];
+        saveCart();
+        updateCartUI();
+        toggleCart();
+    }, 2000);
+}
+
+// رسالة تنبيه
+function showToast(message, type = 'success') {
+    const toast = document.getElementById('toast');
+    if (!toast) return;
+    
+    toast.textContent = message;
+    toast.className = `toast ${type}`;
+    
+    // إزالة أي toast سابق
+    const existingToast = document.querySelector('.toast.show');
+    if (existingToast && existingToast !== toast) {
+        existingToast.classList.remove('show');
+    }
+    
+    setTimeout(() => toast.classList.add('show'), 10);
+    
+    setTimeout(() => {
+        toast.classList.remove('show');
+    }, 3000);
+}
+
+// قائمة الجوال
+function toggleMenu() {
+    const navLinks = document.getElementById('navLinks');
+    if (!navLinks) return;
+    
+    navLinks.classList.toggle('active');
+}
+
+// التهيئة عند تحميل الصفحة
+document.addEventListener('DOMContentLoaded', () => {
+    // تحميل المنتجات
+    loadProducts();
+    
+    // تحديث السلة
+    updateCartUI();
+    
+    // أزرار التصفية
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+            loadProducts(this.dataset.filter);
+        });
+    });
+    
+    // التمرير السلس
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function(e) {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                // إغلاق القائمة في الجوال
+                document.getElementById('navLinks')?.classList.remove('active');
+            }
+        });
+    });
+    
+    // تحديث active link عند التمرير
+    window.addEventListener('scroll', () => {
+        const sections = document.querySelectorAll('section[id]');
+        const scrollY = window.pageYOffset;
+        
+        sections.forEach(section => {
+            const sectionHeight = section.offsetHeight;
+            const sectionTop = section.offsetTop - 100;
+            const sectionId = section.getAttribute('id');
+            const navLink = document.querySelector(`.nav-links a[href="#${sectionId}"]`);
+            
+            if (scrollY > sectionTop && scrollY <= sectionTop + sectionHeight) {
+                document.querySelectorAll('.nav-links a').forEach(link => link.classList.remove('active'));
+                navLink?.classList.add('active');
+            }
+        });
+    });
+});
+
+// تصدير الدوال للـ global scope
+window.toggleCart = toggleCart;
+window.toggleMenu = toggleMenu;
+window.addToCart = addToCart;
+window.updateQuantity = updateQuantity;
+window.removeFromCart = removeFromCart;
+window.checkout = checkout;
