@@ -1,8 +1,12 @@
 import { createRoot } from "react-dom/client";
-import "./index.css";
 import App from "./app";
+import "./index.css";
 
-const rootElement = document.getElementById("root");
-if (!rootElement) throw new Error("No root");
+const rootElement = document.getElementById("root")!;
 
-createRoot(rootElement).render(<App />);
+try {
+  const { createRoot: cr } = await import("react-dom/client");
+  createRoot(rootElement).render(<App />);
+} catch (e) {
+  rootElement.innerHTML = `<h1 style="color:red;padding:20px">${e}</h1>`;
+}
