@@ -1,10 +1,7 @@
 import { createRoot } from "react-dom/client";
-import "./index.css";
+// لا تستورد أي CSS أو أي شيء آخر حاليًا
 
 const rootElement = document.getElementById("root");
+if (!rootElement) throw new Error("No root");
 
-if (!rootElement) {
-  throw new Error("Failed to find the root element");
-}
-
-createRoot(rootElement).render(<div style={{color: 'white', fontSize: '2rem', padding: '2rem'}}>✅ التطبيق يعمل</div>);
+createRoot(rootElement).render(<h1 style={{color: 'white', backgroundColor: 'black', padding: '20px'}}>React يعمل!</h1>);
