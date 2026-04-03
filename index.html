@@ -1,18 +1,1157 @@
 <!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Sakura Sushi — Premium Omakase</title>
-    <meta name="description" content="Experience Tokyo's finest omakase tradition delivered to your door. Freshly sourced ingredients, masterful technique, uncompromising quality." />
-    <meta property="og:title" content="Sakura Sushi — Premium Omakase" />
-    <meta property="og:description" content="Premium Japanese sushi experience delivered to your door." />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,700;0,800;1,700&display=swap" rel="stylesheet" />
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="./src/main.tsx"></script>
-  </body>
+
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ساكورا سوشي | فن السوشي الياباني</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,700&family=Cairo:wght@300;400;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: hsl(222,55%,7%);
+  --bg2: hsl(222,50%,9%);
+  --bg3: hsl(222,45%,12%);
+  --primary: hsl(10,85%,62%);
+  --primary-dim: rgba(235,90,65,0.12);
+  --border: hsl(222,30%,18%);
+  --fg: hsl(40,30%,93%);
+  --muted: hsl(40,15%,60%);
+  --card: hsl(222,48%,10%);
+  --green: hsl(120,40%,55%);
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: 'Cairo', sans-serif;
+  direction: rtl;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* SCROLLBAR */
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: var(–bg2); }
+::-webkit-scrollbar-thumb { background: var(–border); border-radius:3px; }
+
+/* NAVBAR */
+nav {
+position: fixed;
+top: 0; left: 0; right: 0;
+z-index: 1000;
+padding: 20px 24px;
+display: flex;
+align-items: center;
+justify-content: space-between;
+transition: all 0.3s;
+}
+nav.scrolled {
+background: rgba(8,12,25,0.96);
+backdrop-filter: blur(16px);
+padding: 14px 24px;
+border-bottom: 1px solid var(–border);
+}
+.logo {
+display: flex;
+align-items: center;
+gap: 10px;
+cursor: pointer;
+text-decoration: none;
+}
+.logo-icon {
+width: 38px; height: 38px;
+background: var(–primary);
+border-radius: 50%;
+display: flex; align-items: center; justify-content: center;
+font-family: ‘Playfair Display’, serif;
+font-size: 18px;
+color: white;
+font-weight: 700;
+flex-shrink: 0;
+}
+.logo-text {
+font-family: ‘Cairo’, sans-serif;
+font-weight: 700;
+font-size: 17px;
+letter-spacing: 2px;
+color: var(–fg);
+}
+.nav-actions {
+display: flex;
+align-items: center;
+gap: 12px;
+}
+.cart-btn {
+position: relative;
+background: var(–bg3);
+border: 1px solid var(–border);
+border-radius: 50%;
+width: 44px; height: 44px;
+display: flex; align-items: center; justify-content: center;
+cursor: pointer;
+color: var(–fg);
+transition: all 0.2s;
+}
+.cart-btn:hover { border-color: var(–primary); }
+.cart-count {
+position: absolute;
+top: -6px; left: -6px;
+background: var(–primary);
+color: white;
+border-radius: 50%;
+width: 20px; height: 20px;
+font-size: 10px;
+font-weight: 700;
+display: flex; align-items: center; justify-content: center;
+display: none;
+}
+.menu-btn {
+background: none;
+border: none;
+cursor: pointer;
+color: var(–fg);
+display: flex; flex-direction: column; gap: 5px;
+padding: 4px;
+}
+.menu-btn span {
+display: block;
+width: 24px; height: 2px;
+background: var(–fg);
+border-radius: 2px;
+transition: all 0.3s;
+}
+
+/* MOBILE MENU */
+.mobile-menu {
+position: fixed;
+top: 0; left: 0; right: 0; bottom: 0;
+background: var(–bg);
+z-index: 999;
+display: flex;
+flex-direction: column;
+align-items: center;
+justify-content: center;
+gap: 32px;
+opacity: 0;
+pointer-events: none;
+transition: opacity 0.3s;
+}
+.mobile-menu.open { opacity: 1; pointer-events: all; }
+.mobile-menu a {
+font-family: ‘Playfair Display’, serif;
+font-size: 36px;
+color: var(–fg);
+text-decoration: none;
+transition: color 0.2s;
+}
+.mobile-menu a:hover { color: var(–primary); }
+.close-btn {
+position: absolute;
+top: 24px; left: 24px;
+background: none; border: none;
+color: var(–fg); cursor: pointer;
+font-size: 28px;
+}
+
+/* PAGES */
+.page { display: none; min-height: 100vh; }
+.page.active { display: block; }
+
+/* ===== HOME PAGE ===== */
+.hero {
+position: relative;
+min-height: 90vh;
+display: flex;
+align-items: center;
+overflow: hidden;
+border-bottom: 1px solid var(–border);
+}
+.hero-img {
+position: absolute;
+inset: 0;
+background: url(‘https://images.unsplash.com/photo-1579871494447-9811cf80d66c?w=1800&q=90’) center/cover;
+}
+.hero-img::after {
+content: ‘’;
+position: absolute;
+inset: 0;
+background: linear-gradient(to left, var(–bg) 35%, rgba(5,8,20,0.65) 100%),
+linear-gradient(to top, var(–bg) 0%, transparent 55%);
+}
+.hero-content {
+position: relative;
+z-index: 2;
+padding: 100px 24px 60px;
+max-width: 600px;
+}
+.badge {
+display: inline-flex;
+align-items: center;
+gap: 8px;
+padding: 6px 14px;
+border-radius: 999px;
+background: var(–primary-dim);
+border: 1px solid rgba(235,90,65,0.3);
+color: var(–primary);
+font-size: 11px;
+font-weight: 700;
+letter-spacing: 2px;
+text-transform: uppercase;
+margin-bottom: 24px;
+}
+.badge-dot {
+width: 7px; height: 7px;
+border-radius: 50%;
+background: var(–primary);
+animation: pulse 2s infinite;
+}
+@keyframes pulse {
+0%, 100% { opacity: 1; transform: scale(1); }
+50% { opacity: 0.5; transform: scale(0.8); }
+}
+.hero h1 {
+font-family: ‘Playfair Display’, serif;
+font-size: clamp(3rem, 10vw, 5.5rem);
+line-height: 1.1;
+margin-bottom: 20px;
+color: var(–fg);
+}
+.hero h1 em {
+color: var(–primary);
+font-style: italic;
+}
+.hero p {
+font-size: 17px;
+line-height: 1.8;
+color: var(–muted);
+margin-bottom: 36px;
+max-width: 480px;
+}
+.btn-primary {
+display: inline-flex;
+align-items: center;
+gap: 10px;
+padding: 16px 32px;
+background: var(–primary);
+color: white;
+font-family: ‘Cairo’, sans-serif;
+font-weight: 700;
+font-size: 14px;
+letter-spacing: 2px;
+text-transform: uppercase;
+border: none;
+cursor: pointer;
+transition: opacity 0.2s, transform 0.2s;
+text-decoration: none;
+}
+.btn-primary:hover { opacity: 0.88; transform: translateY(-1px); }
+.btn-outline {
+display: inline-flex;
+align-items: center;
+gap: 10px;
+padding: 14px 28px;
+background: transparent;
+color: var(–primary);
+font-family: ‘Cairo’, sans-serif;
+font-weight: 700;
+font-size: 13px;
+letter-spacing: 2px;
+text-transform: uppercase;
+border: 1px solid var(–primary);
+cursor: pointer;
+transition: all 0.2s;
+text-decoration: none;
+}
+.btn-outline:hover { background: var(–primary); color: white; }
+
+/* CATEGORIES */
+.section { padding: 60px 24px; }
+.section-header {
+display: flex;
+align-items: center;
+justify-content: space-between;
+margin-bottom: 28px;
+}
+.section-title {
+font-family: ‘Playfair Display’, serif;
+font-size: 26px;
+font-weight: 700;
+}
+.section-link {
+color: var(–primary);
+font-size: 13px;
+font-weight: 600;
+text-decoration: none;
+display: flex; align-items: center; gap: 4px;
+cursor: pointer;
+}
+.cats-scroll {
+display: flex;
+gap: 12px;
+overflow-x: auto;
+padding-bottom: 8px;
+scrollbar-width: none;
+}
+.cats-scroll::-webkit-scrollbar { display: none; }
+.cat-chip {
+flex-shrink: 0;
+padding: 10px 20px;
+border: 1px solid var(–border);
+border-radius: 8px;
+background: var(–bg3);
+color: var(–fg);
+font-size: 14px;
+font-weight: 600;
+cursor: pointer;
+transition: all 0.2s;
+white-space: nowrap;
+}
+.cat-chip:hover, .cat-chip.active {
+border-color: rgba(235,90,65,0.4);
+background: var(–primary-dim);
+color: var(–primary);
+}
+
+/* PRODUCTS GRID */
+.products-grid {
+display: grid;
+grid-template-columns: 1fr 1fr;
+gap: 14px;
+}
+@media(min-width:600px) {
+.products-grid { grid-template-columns: repeat(3, 1fr); }
+}
+.product-card {
+background: var(–card);
+border: 1px solid var(–border);
+border-radius: 12px;
+overflow: hidden;
+cursor: pointer;
+transition: transform 0.2s, border-color 0.2s;
+animation: fadeUp 0.5s ease both;
+}
+@keyframes fadeUp {
+from { opacity: 0; transform: translateY(16px); }
+to { opacity: 1; transform: translateY(0); }
+}
+.product-card:hover {
+transform: translateY(-3px);
+border-color: rgba(235,90,65,0.25);
+}
+.product-img-wrap {
+position: relative;
+aspect-ratio: 4/3;
+overflow: hidden;
+}
+.product-img-wrap img {
+width: 100%; height: 100%;
+object-fit: cover;
+transition: transform 0.4s;
+}
+.product-card:hover .product-img-wrap img { transform: scale(1.06); }
+.product-badge {
+position: absolute;
+top: 8px; right: 8px;
+background: var(–primary);
+color: white;
+font-size: 9px;
+font-weight: 700;
+padding: 3px 8px;
+border-radius: 4px;
+letter-spacing: 1px;
+text-transform: uppercase;
+}
+.product-badge.new { background: hsl(200,80%,45%); }
+.product-badge.veg { background: var(–green); }
+.product-add {
+position: absolute;
+bottom: 8px; left: 8px;
+width: 32px; height: 32px;
+border-radius: 50%;
+background: var(–primary);
+border: none;
+color: white;
+font-size: 18px;
+cursor: pointer;
+display: flex; align-items: center; justify-content: center;
+transition: transform 0.2s;
+}
+.product-add:hover { transform: scale(1.1); }
+.product-info {
+padding: 12px;
+}
+.product-name {
+font-weight: 700;
+font-size: 14px;
+margin-bottom: 2px;
+white-space: nowrap;
+overflow: hidden;
+text-overflow: ellipsis;
+}
+.product-cat {
+font-size: 10px;
+font-weight: 700;
+color: var(–primary);
+letter-spacing: 1px;
+text-transform: uppercase;
+margin-bottom: 6px;
+}
+.product-desc {
+font-size: 11px;
+color: var(–muted);
+line-height: 1.5;
+display: -webkit-box;
+-webkit-line-clamp: 2;
+-webkit-box-orient: vertical;
+overflow: hidden;
+margin-bottom: 8px;
+}
+.product-footer {
+display: flex;
+align-items: center;
+justify-content: space-between;
+}
+.product-price {
+font-family: ‘JetBrains Mono’, monospace;
+font-size: 15px;
+font-weight: 700;
+color: var(–primary);
+}
+.product-meta {
+font-size: 10px;
+color: var(–muted);
+}
+
+/* ===== PRODUCT DETAIL PAGE ===== */
+.detail-back {
+display: flex;
+align-items: center;
+gap: 8px;
+color: var(–muted);
+font-size: 14px;
+cursor: pointer;
+padding: 80px 24px 20px;
+transition: color 0.2s;
+background: none;
+border: none;
+font-family: ‘Cairo’, sans-serif;
+width: 100%;
+text-align: right;
+}
+.detail-back:hover { color: var(–fg); }
+.detail-img {
+width: 100%;
+aspect-ratio: 16/9;
+object-fit: cover;
+position: relative;
+}
+.detail-img-wrap { position: relative; }
+.detail-badges {
+position: absolute;
+top: 12px; right: 12px;
+display: flex; flex-direction: column; gap: 6px;
+}
+.detail-body { padding: 24px; }
+.detail-cat {
+font-size: 11px;
+font-weight: 700;
+color: var(–primary);
+letter-spacing: 2px;
+text-transform: uppercase;
+margin-bottom: 8px;
+display: flex; align-items: center; gap: 8px;
+}
+.detail-name {
+font-family: ‘Playfair Display’, serif;
+font-size: clamp(2rem, 8vw, 3rem);
+margin-bottom: 12px;
+}
+.detail-price-row {
+display: flex; align-items: baseline; gap: 12px;
+margin-bottom: 20px;
+}
+.detail-price {
+font-family: ‘JetBrains Mono’, monospace;
+font-size: 2rem;
+font-weight: 700;
+color: var(–primary);
+}
+.detail-old-price {
+font-family: ‘JetBrains Mono’, monospace;
+font-size: 1.1rem;
+color: var(–muted);
+text-decoration: line-through;
+}
+.detail-desc {
+color: var(–muted);
+line-height: 1.8;
+margin-bottom: 24px;
+font-size: 15px;
+}
+.detail-specs {
+display: grid;
+grid-template-columns: 1fr 1fr;
+gap: 16px;
+padding: 20px 0;
+border-top: 1px solid var(–border);
+border-bottom: 1px solid var(–border);
+margin-bottom: 24px;
+}
+.spec-label { font-size: 12px; color: var(–muted); margin-bottom: 4px; }
+.spec-value { font-weight: 600; font-size: 15px; }
+.ingredients-wrap { grid-column: 1/-1; }
+.ingredients {
+display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px;
+}
+.ing-tag {
+background: var(–bg3);
+border: 1px solid var(–border);
+border-radius: 999px;
+padding: 4px 12px;
+font-size: 12px;
+color: var(–fg);
+}
+.detail-notes label {
+display: block;
+font-size: 13px;
+font-weight: 600;
+margin-bottom: 8px;
+}
+.detail-notes textarea {
+width: 100%;
+background: var(–bg3);
+border: 1px solid var(–border);
+border-radius: 8px;
+padding: 12px;
+color: var(–fg);
+font-family: ‘Cairo’, sans-serif;
+font-size: 14px;
+resize: none;
+outline: none;
+transition: border-color 0.2s;
+}
+.detail-notes textarea:focus { border-color: rgba(235,90,65,0.4); }
+.qty-row {
+display: flex; gap: 12px; margin-top: 16px; align-items: center;
+}
+.qty-ctrl {
+display: flex;
+align-items: center;
+border: 1px solid var(–border);
+background: var(–bg3);
+border-radius: 8px;
+overflow: hidden;
+}
+.qty-btn {
+background: none; border: none;
+color: var(–muted);
+width: 44px; height: 52px;
+cursor: pointer; font-size: 20px;
+transition: color 0.2s;
+}
+.qty-btn:hover { color: var(–fg); }
+.qty-num {
+width: 48px; text-align: center;
+font-family: ‘JetBrains Mono’, monospace;
+font-size: 18px; font-weight: 700;
+}
+.add-btn {
+flex: 1;
+height: 52px;
+background: var(–primary);
+border: none;
+color: white;
+font-family: ‘Cairo’, sans-serif;
+font-weight: 700;
+font-size: 14px;
+letter-spacing: 1px;
+cursor: pointer;
+border-radius: 8px;
+transition: opacity 0.2s;
+display: flex; align-items: center; justify-content: center; gap: 8px;
+}
+.add-btn:hover { opacity: 0.88; }
+.add-btn.added { background: hsl(120,35%,35%); }
+
+/* ===== CART PAGE ===== */
+.cart-body { padding: 80px 24px 24px; }
+.cart-title {
+font-family: ‘Playfair Display’, serif;
+font-size: 2rem;
+margin-bottom: 4px;
+}
+.cart-subtitle { color: var(–muted); font-size: 14px; margin-bottom: 28px; }
+.cart-header-row {
+display: flex; align-items: center; justify-content: space-between;
+margin-bottom: 20px;
+}
+.clear-btn {
+background: none; border: none;
+color: var(–muted); font-family: ‘Cairo’, sans-serif;
+font-size: 13px; cursor: pointer;
+display: flex; align-items: center; gap: 4px;
+transition: color 0.2s;
+}
+.clear-btn:hover { color: var(–primary); }
+.cart-empty {
+text-align: center;
+padding: 80px 24px;
+}
+.cart-empty svg { opacity: 0.2; margin-bottom: 16px; }
+.cart-empty p { color: var(–muted); margin-bottom: 24px; }
+.cart-item {
+background: var(–card);
+border: 1px solid var(–border);
+border-radius: 12px;
+padding: 16px;
+margin-bottom: 12px;
+display: grid;
+grid-template-columns: 80px 1fr auto;
+gap: 14px;
+align-items: center;
+}
+.cart-item img {
+width: 80px; height: 80px;
+border-radius: 8px; object-fit: cover;
+}
+.cart-item-name { font-weight: 700; font-size: 15px; margin-bottom: 4px; }
+.cart-item-price { color: var(–primary); font-family: ‘JetBrains Mono’, monospace; font-size: 14px; }
+.cart-item-each { color: var(–muted); font-size: 12px; }
+.cart-item-controls {
+display: flex; flex-direction: column; align-items: center; gap: 8px;
+}
+.cart-qty-row {
+display: flex; align-items: center; gap: 8px;
+border: 1px solid var(–border);
+border-radius: 8px;
+overflow: hidden;
+background: var(–bg3);
+}
+.cqb {
+background: none; border: none;
+color: var(–muted); padding: 6px 10px;
+cursor: pointer; font-size: 16px; transition: color 0.2s;
+}
+.cqb:hover { color: var(–fg); }
+.cqn { font-family: ‘JetBrains Mono’, monospace; font-size: 14px; font-weight: 700; min-width: 24px; text-align: center; }
+.del-btn {
+background: none; border: none;
+color: var(–muted); cursor: pointer;
+font-size: 16px; transition: color 0.2s;
+}
+.del-btn:hover { color: var(–primary); }
+.order-summary {
+background: var(–card);
+border: 1px solid var(–border);
+border-radius: 12px;
+padding: 20px;
+margin-top: 24px;
+}
+.order-summary h3 {
+font-family: ‘Playfair Display’, serif;
+font-size: 20px;
+margin-bottom: 16px;
+}
+.summary-row {
+display: flex; justify-content: space-between;
+font-size: 14px; margin-bottom: 10px; color: var(–muted);
+}
+.summary-total {
+display: flex; justify-content: space-between;
+font-size: 17px; font-weight: 700;
+border-top: 1px solid var(–border);
+padding-top: 12px; margin-top: 8px;
+}
+.checkout-btn {
+width: 100%; margin-top: 16px;
+padding: 16px;
+background: var(–primary);
+border: none;
+color: white;
+font-family: ‘Cairo’, sans-serif;
+font-weight: 700;
+font-size: 15px;
+letter-spacing: 1px;
+cursor: pointer;
+border-radius: 8px;
+transition: opacity 0.2s;
+}
+.checkout-btn:hover { opacity: 0.88; }
+
+/* ===== SUCCESS PAGE ===== */
+.success-page {
+display: flex; flex-direction: column;
+align-items: center; justify-content: center;
+min-height: 100vh;
+padding: 24px;
+text-align: center;
+}
+.success-icon {
+width: 80px; height: 80px;
+background: rgba(80,180,80,0.15);
+border: 2px solid var(–green);
+border-radius: 50%;
+display: flex; align-items: center; justify-content: center;
+font-size: 36px;
+margin-bottom: 24px;
+animation: popIn 0.5s cubic-bezier(.34,1.56,.64,1) both;
+}
+@keyframes popIn {
+from { opacity:0; transform: scale(0.5); }
+to { opacity:1; transform: scale(1); }
+}
+.success-page h2 {
+font-family: ‘Playfair Display’, serif;
+font-size: 2rem;
+margin-bottom: 12px;
+}
+.success-page p { color: var(–muted); margin-bottom: 32px; line-height: 1.7; }
+
+/* FOOTER */
+footer {
+background: var(–bg2);
+border-top: 1px solid var(–border);
+padding: 40px 24px;
+text-align: center;
+}
+footer .logo { justify-content: center; margin-bottom: 16px; }
+footer p { color: var(–muted); font-size: 13px; }
+
+/* TOAST */
+.toast {
+position: fixed;
+bottom: 24px; left: 50%;
+transform: translateX(-50%) translateY(100px);
+background: var(–bg3);
+border: 1px solid var(–border);
+border-radius: 99px;
+padding: 12px 24px;
+font-size: 14px;
+font-weight: 600;
+z-index: 9999;
+transition: transform 0.3s cubic-bezier(.34,1.56,.64,1);
+white-space: nowrap;
+display: flex; align-items: center; gap: 8px;
+}
+.toast.show { transform: translateX(-50%) translateY(0); }
+
+/* SECTION BG */
+.section-dark { background: var(–bg2); border-top: 1px solid var(–border); border-bottom: 1px solid var(–border); }
+
+/* MENU PAGE */
+.menu-header {
+padding: 90px 24px 24px;
+border-bottom: 1px solid var(–border);
+}
+.menu-header h1 {
+font-family: ‘Playfair Display’, serif;
+font-size: clamp(2rem, 8vw, 3.5rem);
+margin-bottom: 8px;
+}
+.menu-header p { color: var(–muted); font-size: 15px; }
+</style>
+
+</head>
+<body>
+
+<!-- NAVBAR -->
+
+<nav id="navbar">
+  <div class="logo" onclick="showPage('home')">
+    <div class="logo-icon">S</div>
+    <span class="logo-text">ساكورا سوشي</span>
+  </div>
+  <div class="nav-actions">
+    <button class="cart-btn" onclick="showPage('cart')" title="السلة">
+      <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 2 3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+      <span class="cart-count" id="cartCount">0</span>
+    </button>
+    <button class="menu-btn" onclick="toggleMenu()">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- MOBILE MENU -->
+
+<div class="mobile-menu" id="mobileMenu">
+  <button class="close-btn" onclick="toggleMenu()">✕</button>
+  <a onclick="showPage('home');toggleMenu()">الرئيسية</a>
+  <a onclick="showPage('menu');toggleMenu()">القائمة</a>
+  <a onclick="showPage('cart');toggleMenu()">سلة الطلبات</a>
+</div>
+
+<!-- HOME PAGE -->
+
+<div class="page active" id="page-home">
+  <section class="hero">
+    <div class="hero-img"></div>
+    <div class="hero-content">
+      <div class="badge"><span class="badge-dot"></span>أوماكاسي بريميوم</div>
+      <h1>فن السوشي<br><em>في كل لقمة.</em></h1>
+      <p>اختبر أرقى تقاليد الأوماكاسي من طوكيو، تُقدَّم إلى بابك. مكونات طازجة، أسلوب محترف، جودة لا تُجارى.</p>
+      <button class="btn-primary" onclick="showPage('menu')">
+        استعرض القائمة
+        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </button>
+    </div>
+  </section>
+
+  <!-- CATEGORIES -->
+
+  <section class="section section-dark">
+    <div class="section-header">
+      <h2 class="section-title">التصنيفات</h2>
+      <a class="section-link" onclick="showPage('menu')">عرض الكل ›</a>
+    </div>
+    <div class="cats-scroll" id="homeCats"></div>
+  </section>
+
+  <!-- FEATURED -->
+
+  <section class="section">
+    <div class="section-header">
+      <div>
+        <p style="font-size:11px;font-weight:700;color:var(--primary);letter-spacing:2px;text-transform:uppercase;margin-bottom:6px">اختيار الشيف</p>
+        <h2 class="section-title">الأطباق المميزة</h2>
+      </div>
+      <a class="section-link" onclick="showPage('menu')">الكل ›</a>
+    </div>
+    <div class="products-grid" id="featuredGrid"></div>
+    <div style="text-align:center;margin-top:32px">
+      <button class="btn-outline" onclick="showPage('menu')">عرض القائمة الكاملة</button>
+    </div>
+  </section>
+
+  <footer>
+    <div class="logo" style="justify-content:center;margin-bottom:12px">
+      <div class="logo-icon">S</div>
+      <span class="logo-text">ساكورا سوشي</span>
+    </div>
+    <p>© 2025 ساكورا سوشي — صُنع بإتقان وشغف</p>
+  </footer>
+</div>
+
+<!-- MENU PAGE -->
+
+<div class="page" id="page-menu">
+  <div class="menu-header">
+    <h1>قائمة الطعام</h1>
+    <p>اكتشف مجموعتنا الكاملة من أرقى أطباق السوشي</p>
+  </div>
+  <section class="section section-dark" style="padding:20px 24px">
+    <div class="cats-scroll" id="menuCats"></div>
+  </section>
+  <section class="section" style="padding-top:24px">
+    <div class="products-grid" id="menuGrid"></div>
+  </section>
+  <footer>
+    <div class="logo" style="justify-content:center;margin-bottom:12px">
+      <div class="logo-icon">S</div>
+      <span class="logo-text">ساكورا سوشي</span>
+    </div>
+    <p>© 2025 ساكورا سوشي — صُنع بإتقان وشغف</p>
+  </footer>
+</div>
+
+<!-- PRODUCT DETAIL PAGE -->
+
+<div class="page" id="page-product">
+  <button class="detail-back" onclick="history.back(); showPage(prevPage)">
+    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+    العودة للقائمة
+  </button>
+  <div id="productDetail"></div>
+</div>
+
+<!-- CART PAGE -->
+
+<div class="page" id="page-cart">
+  <div class="cart-body">
+    <div class="cart-header-row">
+      <div>
+        <h1 class="cart-title">طلبك</h1>
+        <p class="cart-subtitle" id="cartSubtitle">السلة فارغة</p>
+      </div>
+      <button class="clear-btn" onclick="clearCart()">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a1 1 0 011-1h4a1 1 0 011 1v2"/></svg>
+        مسح الكل
+      </button>
+    </div>
+    <div id="cartItems"></div>
+    <div id="cartSummary"></div>
+  </div>
+</div>
+
+<!-- SUCCESS PAGE -->
+
+<div class="page" id="page-success">
+  <div class="success-page">
+    <div class="success-icon">✓</div>
+    <h2>تم استلام طلبك!</h2>
+    <p>شكراً لك على طلبك من ساكورا سوشي.<br>سيصلك طلبك خلال 30-45 دقيقة.</p>
+    <button class="btn-primary" onclick="showPage('home')">العودة للرئيسية</button>
+  </div>
+</div>
+
+<!-- TOAST -->
+
+<div class="toast" id="toast">
+  <span>🍣</span>
+  <span id="toastMsg">تمت الإضافة للسلة</span>
+</div>
+
+<script>
+// ===== DATA =====
+const categories = [
+  {id:0, name:"الكل"},
+  {id:1, name:"نيغيري"},
+  {id:2, name:"ماكي رولز"},
+  {id:3, name:"ساشيمي"},
+  {id:4, name:"تيماكي"},
+  {id:5, name:"أوراماكي"},
+  {id:6, name:"تخصصات"},
+];
+
+const products = [
+  {id:1,name:"نيغيري السلمون",desc:"سلمون أطلسي فاخر محضّر يدوياً فوق أرز السوشي المتبّل. قوام ناعم زبداني بنكهة محيطية نقية.",price:14,catId:1,catName:"نيغيري",img:"https://images.unsplash.com/photo-1617196034183-421b4040ed20?w=600&q=80",ingredients:["سلمون أطلسي","أرز سوشي","واسابي","نوري"],calories:180,pieces:2,spice:0,veg:false,featured:true,popular:true,isNew:false},
+  {id:2,name:"نيغيري التونا",desc:"تونا زعنفة زرقاء فاخرة فوق أرز سوشي محضّر يدوياً. نكهة غنية ونظيفة بلمسة حريرية.",price:16,catId:1,catName:"نيغيري",img:"https://images.unsplash.com/photo-1553621042-f6e147245754?w=600&q=80",ingredients:["تونا زعنفة زرقاء","أرز سوشي","واسابي","صوص صويا"],calories:160,pieces:2,spice:0,veg:false,featured:true,popular:true,isNew:false},
+  {id:3,name:"نيغيري الإنباشي",desc:"إنباشي زبداني بنكهة خفيفة حلوة. من أكثر الأطباق محبوبة بتدرج الرخامة الرائع.",price:15,catId:1,catName:"نيغيري",img:"https://images.unsplash.com/photo-1611143669185-af224c5e3252?w=600&q=80",ingredients:["إنباشي","أرز سوشي","واسابي","بصل أخضر"],calories:170,pieces:2,spice:0,veg:false,featured:false,popular:false,isNew:true},
+  {id:4,name:"رول التنين",desc:"جمبري تمبورا بالداخل، أفوكادو فوق الخارج كقشور التنين. مع صوص الأنقليس.",price:22,origPrice:26,catId:5,catName:"أوراماكي",img:"https://images.unsplash.com/photo-1617196034154-4e8c71e8f1a7?w=600&q=80",ingredients:["جمبري تمبورا","أفوكادو","خيار","صوص أنقليس","سمسم"],calories:420,pieces:8,spice:1,veg:false,featured:true,popular:true,isNew:false},
+  {id:5,name:"رول التونا الحار",desc:"تونا طازجة مع مايونيز حار وخيار. توازن مثالي بين الحرارة والأومامي.",price:18,catId:2,catName:"ماكي رولز",img:"https://images.unsplash.com/photo-1582450871972-ab5ca641643d?w=600&q=80",ingredients:["تونا","مايونيز حار","خيار","نوري","بذور سمسم"],calories:310,pieces:6,spice:2,veg:false,featured:true,popular:true,isNew:false},
+  {id:6,name:"رول كاليفورنيا",desc:"رول كلاسيكي بالسلطعون والأفوكادو والخيار من الداخل للخارج. مفضل الجميع على مر الزمن.",price:14,catId:5,catName:"أوراماكي",img:"https://images.unsplash.com/photo-1617196034232-5b2a5a57e0fb?w=600&q=80",ingredients:["سرطان البحر","أفوكادو","خيار","بذور سمسم","نوري"],calories:280,pieces:8,spice:0,veg:false,featured:false,popular:true,isNew:false},
+  {id:7,name:"رول قوس قزح",desc:"رول كاليفورنيا مُزيّن بمجموعة من الأسماك الطازجة: سلمون، تونا، إنباشي وأفوكادو.",price:24,catId:5,catName:"أوراماكي",img:"https://images.unsplash.com/photo-1559410545-0bdcd187e0a6?w=600&q=80",ingredients:["سلمون","تونا","إنباشي","أفوكادو","خيار","سلطعون"],calories:480,pieces:8,spice:0,veg:false,featured:true,popular:true,isNew:false},
+  {id:8,name:"ساشيمي السلمون",desc:"خمس شرائح ناصعة من السلمون الأطلسي الفاخر. نكهة محيطية نقية صافية.",price:20,catId:3,catName:"ساشيمي",img:"https://images.unsplash.com/photo-1534482421-64566f976cfa?w=600&q=80",ingredients:["سلمون أطلسي","زنجبيل","واسابي","دايكون"],calories:200,pieces:5,spice:0,veg:false,featured:false,popular:true,isNew:false},
+  {id:9,name:"ساشيمي التونا",desc:"خمس شرائح من تونا الزعنفة الزرقاء الفاخرة. أحمر عميق، لحمي، غني بشكل رائع.",price:22,catId:3,catName:"ساشيمي",img:"https://images.unsplash.com/photo-1617196034148-8b18a5e7b0a0?w=600&q=80",ingredients:["تونا زعنفة زرقاء","زنجبيل","واسابي","صوص صويا"],calories:180,pieces:5,spice:0,veg:false,featured:false,popular:false,isNew:true},
+  {id:10,name:"رول نباتي",desc:"خيار طازج، أفوكادو، فجل مخلل وجزر ملفوف في نوري. خفيف وملون.",price:12,catId:2,catName:"ماكي رولز",img:"https://images.unsplash.com/photo-1617196034099-e3dc2fb23a80?w=600&q=80",ingredients:["خيار","أفوكادو","فجل مخلل","جزر","نوري","سمسم"],calories:200,pieces:6,spice:0,veg:true,featured:false,popular:false,isNew:false},
+  {id:11,name:"تيماكي السلمون",desc:"مخروط محضّر يدوياً مليء بالسلمون والأفوكادو وأرز السوشي. طازج ولذيذ فوراً.",price:12,catId:4,catName:"تيماكي",img:"https://images.unsplash.com/photo-1559410545-0bdcd187e0a6?w=600&q=80",ingredients:["سلمون","أفوكادو","أرز سوشي","نوري","سمسم"],calories:280,pieces:1,spice:0,veg:false,featured:false,popular:false,isNew:true},
+  {id:12,name:"طبق أوماكاسي",desc:"اختيار الشيف من 12 قطعة: نيغيري، ساشيمي ورولات تخصصات. التجربة الكاملة للسوشي.",price:65,origPrice:78,catId:6,catName:"تخصصات",img:"https://images.unsplash.com/photo-1611143669185-af224c5e3252?w=600&q=80",ingredients:["اختيار الشيف","أسماك موسمية","مكونات فاخرة"],calories:850,pieces:12,spice:1,veg:false,featured:true,popular:true,isNew:false},
+  {id:13,name:"رول البركان",desc:"تونا حارة بالداخل، إسكالوب مخبوز مع مايونيز حار فوق. مُزيّن بتوبيكو.",price:26,catId:6,catName:"تخصصات",img:"https://images.unsplash.com/photo-1562802378-063ec186a863?w=600&q=80",ingredients:["تونا حارة","إسكالوب","مايونيز حار","توبيكو","خيار"],calories:520,pieces:8,spice:3,veg:false,featured:true,popular:false,isNew:true},
+];
+
+// ===== STATE =====
+let cart = JSON.parse(localStorage.getItem('sakura-cart')||'[]');
+let currentPage = 'home';
+let prevPage = 'menu';
+let selectedCat = 0;
+
+// ===== CART =====
+function saveCart(){ localStorage.setItem('sakura-cart', JSON.stringify(cart)); updateCartUI(); }
+function addToCart(id, qty=1, notes=''){
+  const p = products.find(x=>x.id===id);
+  const existing = cart.find(x=>x.id===id && x.notes===notes);
+  if(existing) existing.qty += qty;
+  else cart.push({id, qty, notes, name:p.name, price:p.price, img:p.img});
+  saveCart();
+  showToast(`أُضيف "${p.name}" إلى السلة 🍣`);
+}
+function removeFromCart(id){ cart = cart.filter(x=>x.id!==id); saveCart(); renderCart(); }
+function updateQty(id, delta){
+  const item = cart.find(x=>x.id===id);
+  if(!item) return;
+  item.qty = Math.max(1, item.qty + delta);
+  saveCart(); renderCart();
+}
+function clearCart(){ cart=[]; saveCart(); renderCart(); }
+function cartTotal(){ return cart.reduce((s,x)=>s+x.price*x.qty,0); }
+function cartCount(){ return cart.reduce((s,x)=>s+x.qty,0); }
+function updateCartUI(){
+  const c = cartCount();
+  const el = document.getElementById('cartCount');
+  el.textContent = c;
+  el.style.display = c>0 ? 'flex' : 'none';
+}
+
+// ===== PAGES =====
+function showPage(name){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById('page-'+name).classList.add('active');
+  window.scrollTo(0,0);
+  prevPage = currentPage;
+  currentPage = name;
+  if(name==='home') renderHome();
+  if(name==='menu') renderMenu();
+  if(name==='cart') renderCart();
+}
+
+function showProduct(id){
+  prevPage = currentPage;
+  showPage('product');
+  renderProduct(id);
+}
+
+function toggleMenu(){
+  document.getElementById('mobileMenu').classList.toggle('open');
+}
+
+// ===== RENDER =====
+function productCardHTML(p, i=0){
+  let badge = '';
+  if(p.popular && !p.isNew) badge = `<div class="product-badge">شائع</div>`;
+  if(p.isNew) badge = `<div class="product-badge new">جديد</div>`;
+  if(p.veg) badge += `<div class="product-badge veg">نباتي</div>`;
+  return `
+  <div class="product-card" style="animation-delay:${i*0.07}s" onclick="showProduct(${p.id})">
+    <div class="product-img-wrap">
+      <img src="${p.img}" alt="${p.name}" loading="lazy">
+      ${badge}
+      <button class="product-add" onclick="event.stopPropagation();addToCart(${p.id})">+</button>
+    </div>
+    <div class="product-info">
+      <div class="product-cat">${p.catName}</div>
+      <div class="product-name">${p.name}</div>
+      <div class="product-desc">${p.desc}</div>
+      <div class="product-footer">
+        <span class="product-price">$${p.price.toFixed(2)}</span>
+        <span class="product-meta">${p.pieces} قطع · ${p.calories} سعرة</span>
+      </div>
+    </div>
+  </div>`;
+}
+
+function renderHome(){
+  // cats
+  const catsEl = document.getElementById('homeCats');
+  catsEl.innerHTML = categories.slice(1).map(c=>`<div class="cat-chip" onclick="showPage('menu')">${c.name}</div>`).join('');
+  // featured
+  const featured = products.filter(p=>p.featured);
+  document.getElementById('featuredGrid').innerHTML = featured.map((p,i)=>productCardHTML(p,i)).join('');
+}
+
+function renderMenu(){
+  const menuCats = document.getElementById('menuCats');
+  menuCats.innerHTML = categories.map(c=>`
+    <div class="cat-chip ${selectedCat===c.id?'active':''}" onclick="filterCat(${c.id})">${c.name}</div>
+  `).join('');
+  const filtered = selectedCat===0 ? products : products.filter(p=>p.catId===selectedCat);
+  document.getElementById('menuGrid').innerHTML = filtered.map((p,i)=>productCardHTML(p,i)).join('');
+}
+
+function filterCat(id){
+  selectedCat = id;
+  renderMenu();
+}
+
+function renderProduct(id){
+  const p = products.find(x=>x.id===id);
+  if(!p) return;
+  let badge = '';
+  if(p.popular) badge += `<div class="product-badge">شائع</div>`;
+  if(p.isNew) badge += `<div class="product-badge new">جديد</div>`;
+  const spiceIcons = p.spice>0 ? '🌶'.repeat(p.spice) : '';
+  document.getElementById('productDetail').innerHTML = `
+    <div class="detail-img-wrap">
+      <img class="detail-img" src="${p.img}" alt="${p.name}">
+      <div class="detail-badges">${badge}</div>
+    </div>
+    <div class="detail-body">
+      <div class="detail-cat">
+        <span>${p.catName}</span>
+        ${p.veg?'<span style="color:var(--green)">🌿 نباتي</span>':''}
+        ${spiceIcons?`<span>${spiceIcons}</span>`:''}
+      </div>
+      <h1 class="detail-name">${p.name}</h1>
+      <div class="detail-price-row">
+        <span class="detail-price">$${p.price.toFixed(2)}</span>
+        ${p.origPrice?`<span class="detail-old-price">$${p.origPrice.toFixed(2)}</span>`:''}
+      </div>
+      <p class="detail-desc">${p.desc}</p>
+      <div class="detail-specs">
+        <div>
+          <div class="spec-label">حجم الحصة</div>
+          <div class="spec-value">${p.pieces} قطع</div>
+        </div>
+        <div>
+          <div class="spec-label">السعرات الحرارية</div>
+          <div class="spec-value">${p.calories} سعرة</div>
+        </div>
+        <div class="ingredients-wrap">
+          <div class="spec-label">المكونات الرئيسية</div>
+          <div class="ingredients">${p.ingredients.map(i=>`<span class="ing-tag">${i}</span>`).join('')}</div>
+        </div>
+      </div>
+      <div class="detail-notes">
+        <label>تعليمات خاصة</label>
+        <textarea id="pNotes" rows="3" placeholder="أي تفضيلات غذائية أو حساسيات؟"></textarea>
+
+```
+  </div>
+  <div class="qty-row">
+    <div class="qty-ctrl">
+      <button class="qty-btn" onclick="changeQty(-1)">−</button>
+      <span class="qty-num" id="pQty">1</span>
+      <button class="qty-btn" onclick="changeQty(1)">+</button>
+    </div>
+    <button class="add-btn" id="addBtn" onclick="addFromDetail(${p.id})">
+      <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 2 3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+      أضف للطلب — $${p.price.toFixed(2)}
+    </button>
+  </div>
+</div>
+```
+
+`;
+window._detailQty = 1;
+window._detailProduct = p;
+}
+
+function changeQty(d){
+window._detailQty = Math.max(1, (window._detailQty||1)+d);
+document.getElementById(‘pQty’).textContent = window._detailQty;
+const p = window._detailProduct;
+if(p) document.getElementById(‘addBtn’).innerHTML = `<svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 2 3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg> أضف للطلب — $${(p.price*window._detailQty).toFixed(2)}`;
+}
+
+function addFromDetail(id){
+const qty = window._detailQty||1;
+const notes = document.getElementById(‘pNotes’)?.value||’’;
+addToCart(id,qty,notes);
+const btn = document.getElementById(‘addBtn’);
+btn.classList.add(‘added’);
+btn.textContent = ‘تمت الإضافة! ✓’;
+setTimeout(()=>{ btn.classList.remove(‘added’); changeQty(0); },2000);
+}
+
+function renderCart(){
+const sub = document.getElementById(‘cartSubtitle’);
+const itemsEl = document.getElementById(‘cartItems’);
+const summaryEl = document.getElementById(‘cartSummary’);
+if(cart.length===0){
+sub.textContent = ‘السلة فارغة’;
+itemsEl.innerHTML = ` <div class="cart-empty"> <svg width="64" height="64" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M6 2 3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg> <p>لم تضف أي شيء بعد</p> <button class="btn-primary" onclick="showPage('menu')">استعرض القائمة</button> </div>`;
+summaryEl.innerHTML = ‘’;
+return;
+}
+sub.textContent = `${cartCount()} عناصر في سلتك`;
+itemsEl.innerHTML = cart.map(item=>`<div class="cart-item"> <img src="${item.img}" alt="${item.name}"> <div> <div class="cart-item-name">${item.name}</div> <div class="cart-item-price">$${(item.price*item.qty).toFixed(2)}</div> <div class="cart-item-each">$${item.price.toFixed(2)} للوحدة</div> </div> <div class="cart-item-controls"> <div class="cart-qty-row"> <button class="cqb" onclick="updateQty(${item.id},-1)">−</button> <span class="cqn">${item.qty}</span> <button class="cqb" onclick="updateQty(${item.id},1)">+</button> </div> <button class="del-btn" onclick="removeFromCart(${item.id})">🗑</button> </div> </div>`).join(’’);
+const delivery = 3.99;
+const sub2 = cartTotal();
+summaryEl.innerHTML = `<div class="order-summary"> <h3>ملخص الطلب</h3> <div class="summary-row"><span>المجموع الجزئي (${cartCount()} عناصر)</span><span>$${sub2.toFixed(2)}</span></div> <div class="summary-row"><span>رسوم التوصيل</span><span>$${delivery.toFixed(2)}</span></div> <div class="summary-total"><span>الإجمالي</span><span style="color:var(--primary)">$${(sub2+delivery).toFixed(2)}</span></div> <button class="checkout-btn" onclick="checkout()">إتمام الطلب ←</button> </div>`;
+}
+
+function checkout(){
+cart = []; saveCart();
+showPage(‘success’);
+}
+
+// ===== TOAST =====
+function showToast(msg){
+const t = document.getElementById(‘toast’);
+document.getElementById(‘toastMsg’).textContent = msg;
+t.classList.add(‘show’);
+setTimeout(()=>t.classList.remove(‘show’),2500);
+}
+
+// ===== NAVBAR SCROLL =====
+window.addEventListener(‘scroll’,()=>{
+document.getElementById(‘navbar’).classList.toggle(‘scrolled’, window.scrollY>30);
+});
+
+// ===== INIT =====
+updateCartUI();
+renderHome();
+</script>
+
+</body>
 </html>
