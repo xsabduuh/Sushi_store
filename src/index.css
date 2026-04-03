@@ -1,11 +1,43 @@
-import { createRoot } from "react-dom/client";
-import App from "./app";
-import "./index.css";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-const rootElement = document.getElementById("root");
-
-if (!rootElement) {
-  throw new Error("Failed to find the root element");
+@layer base {
+  * {
+    border-color: theme("colors.border");
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+  body {
+    background-color: theme("colors.background");
+    color: theme("colors.foreground");
+    font-family: "Inter", sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  ::selection {
+    background-color: rgba(250, 100, 80, 0.3);
+  }
+  ::-webkit-scrollbar {
+    width: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: hsl(222, 47%, 9%);
+  }
+  ::-webkit-scrollbar-thumb {
+    background: hsl(222, 30%, 25%);
+    border-radius: 3px;
+  }
 }
 
-createRoot(rootElement).render(<App />);
+.font-display {
+  font-family: "Playfair Display", serif;
+}
+
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
